@@ -1,0 +1,709 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="theme-color" content="#0f0f0f">
+    <title>Rain Linktree</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        :root {
+            --primary: #6366f1;
+            --secondary: #ec4899;
+            --accent: #8b5cf6;
+            --dark: #0f0f0f;
+            --card: rgba(255,255,255,0.03);
+            --border: rgba(255,255,255,0.06);
+            --online: #22c55e;
+        }
+
+        html {
+            height: 100%;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--dark);
+            min-height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 35px 18px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Animated Background Orbs */
+        .bg-mesh {
+            position: fixed;
+            inset: 0;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            will-change: transform;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: var(--primary);
+            top: -100px;
+            left: -100px;
+            animation: float1 20s ease-in-out infinite;
+        }
+
+        .orb-2 {
+            width: 300px;
+            height: 300px;
+            background: var(--secondary);
+            top: 20%;
+            right: -50px;
+            animation: float2 25s ease-in-out infinite;
+        }
+
+        .orb-3 {
+            width: 250px;
+            height: 250px;
+            background: var(--accent);
+            bottom: 10%;
+            left: 10%;
+            animation: float3 22s ease-in-out infinite;
+        }
+
+        @keyframes float1 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(50px, 30px) scale(1.1); }
+        }
+
+        @keyframes float2 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(-30px, 50px) scale(0.9); }
+        }
+
+        @keyframes float3 {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            50% { transform: translate(40px, -30px) scale(1.05); }
+        }
+
+        /* Glass Overlay */
+        .glass {
+            position: fixed;
+            inset: 0;
+            background: radial-gradient(ellipse at center, transparent 0%, var(--dark) 70%);
+            z-index: -1;
+            pointer-events: none;
+        }
+
+        /* Profile Section */
+        .profile {
+            text-align: center;
+            margin-bottom: 40px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .avatar-wrap {
+            position: relative;
+            width: 110px;
+            height: 110px;
+            margin: 0 auto 20px;
+        }
+
+        .avatar-ring {
+            position: absolute;
+            inset: -4px;
+            border-radius: 50%;
+            background: conic-gradient(from 0deg, var(--primary), var(--secondary), var(--accent), var(--primary));
+            animation: spin 10s linear infinite;
+            opacity: 0.8;
+        }
+
+        .avatar {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f0f 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 2px solid rgba(255,255,255,0.1);
+            overflow: hidden;
+        }
+
+        .avatar svg {
+            width: 55px;
+            height: 55px;
+            fill: url(#grad1);
+        }
+        
+        .avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+            display: block;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+               /* Name with Verified Badge di samping (kecil) */
+        .name-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .name {
+            font-size: 28px;
+            font-weight: 800;
+            background: linear-gradient(to right, #fff, #a5b4fc);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: -0.5px;
+        }
+
+        /* Verified Badge Kecil di Samping Nama */
+        .verified-glow {
+            position: relative;
+            width: 18px;
+            height: 18px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .verified-glow::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #3b82f6, #06b6d4, #3b82f6);
+            opacity: 0.5;
+            filter: blur(4px);
+            animation: glowPulse 2s ease-in-out infinite;
+        }
+
+        .verified-badge {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #3b82f6 0%, #06b6d4 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1.5px solid rgba(255,255,255,0.3);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.4);
+            animation: badgePulse 2s ease-in-out infinite;
+        }
+
+        .verified-badge svg {
+            width: 9px;
+            height: 9px;
+            fill: white;
+            filter: drop-shadow(0 1px 1px rgba(0,0,0,0.2));
+        }
+
+        @keyframes glowPulse {
+            0%, 100% { opacity: 0.4; transform: scale(1); }
+            50% { opacity: 0.7; transform: scale(1.2); }
+        }
+
+        @keyframes badgePulse {
+            0%, 100% { box-shadow: 0 0 8px rgba(59, 130, 246, 0.3); transform: scale(1); }
+            50% { box-shadow: 0 0 15px rgba(59, 130, 246, 0.5), 0 0 25px rgba(6, 182, 212, 0.2); transform: scale(1.05); }
+        }
+
+
+        .handle {
+            color: #6366f1;
+            font-size: 14px;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        /* Stats */
+        .stats {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            color: #888;
+            font-size: 12px;
+        }
+
+        .stat {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: rgba(255,255,255,0.03);
+            border-radius: 20px;
+            border: 1px solid var(--border);
+        }
+
+        .stat svg {
+            width: 14px;
+            height: 14px;
+            fill: currentColor;
+        }
+
+        /* Links Container */
+        .links {
+            width: 100%;
+            max-width: 420px;
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Premium Link Card */
+        .link {
+            position: relative;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 18px;
+            padding: 18px 20px;
+            text-decoration: none;
+            color: inherit;
+            overflow: hidden;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            will-change: transform, box-shadow;
+        }
+
+        .link::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.03), transparent);
+            transform: translateX(-100%);
+            transition: transform 0.6s;
+        }
+
+        .link:hover::before,
+        .link:active::before {
+            transform: translateX(100%);
+        }
+
+        .link:hover,
+        .link:active {
+            transform: translateY(-3px);
+            background: rgba(255,255,255,0.06);
+            border-color: rgba(255,255,255,0.12);
+            box-shadow: 0 10px 40px -10px rgba(99, 102, 241, 0.3);
+        }
+
+        /* Icon Box */
+        .icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .icon-box::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            opacity: 0.9;
+        }
+
+        .icon-box svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* WhatsApp - Green */
+        .wa .icon-box::before {
+            background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
+        }
+
+        /* Instagram - Sunset */
+        .ig .icon-box::before {
+            background: linear-gradient(135deg, #f59e0b 0%, #ec4899 50%, #8b5cf6 100%);
+        }
+
+        /* Socialbuzz - Love */
+        .socialbuzz .icon-box::before {
+            background: linear-gradient(135deg, #f472b6 0%, #db2777 50%, #be185d 100%);
+        }
+
+        .socialbuzz .icon-box svg {
+            animation: heartbeat 2s ease-in-out infinite;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            14% { transform: scale(1.15); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.15); }
+            70% { transform: scale(1); }
+        }
+
+        /* WA Group - Teal */
+        .wagroup .icon-box::before {
+            background: linear-gradient(135deg, #14b8a6 0%, #0d9488 50%, #0f766e 100%);
+        }
+        
+        /* Saweria - Coffee Gold */
+         .saweria .icon-box::before {
+          background: linear-gradient(135deg, #f59e0b 0%, #d97706 50%, #b45309 100%);
+       }
+
+          .saweria .icon-box svg {
+            width: 24px;
+            height: 24px;
+            fill: white;
+            filter: drop-shadow(0 2px 4px rgba(0,0,0,0.2));
+       }
+
+        /* Gold Badge */
+        .badge-gold {
+         background: rgba(245, 158, 11, 0.15);
+         color: #fbbf24;
+        border: 1px solid rgba(245, 158, 11, 0.3);
+       }
+
+
+        /* Content */
+        .content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .title {
+            font-size: 16px;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 3px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Online Indicator */
+        .online-indicator {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 11px;
+            color: var(--online);
+            font-weight: 500;
+            background: rgba(34, 197, 94, 0.1);
+            padding: 3px 8px;
+            border-radius: 20px;
+            border: 1px solid rgba(34, 197, 94, 0.2);
+        }
+
+        .online-dot {
+            width: 7px;
+            height: 7px;
+            background: var(--online);
+            border-radius: 50%;
+            position: relative;
+        }
+
+        .online-dot::before {
+            content: '';
+            position: absolute;
+            inset: -3px;
+            border-radius: 50%;
+            background: var(--online);
+            opacity: 0.4;
+            animation: onlinePulse 2s ease-in-out infinite;
+        }
+
+        @keyframes onlinePulse {
+            0%, 100% { transform: scale(1); opacity: 0.4; }
+            50% { transform: scale(2.5); opacity: 0; }
+        }
+
+        .desc {
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* Arrow */
+        .arrow {
+            width: 32px;
+            height: 32px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.05);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #666;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .link:hover .arrow,
+        .link:active .arrow {
+            background: var(--primary);
+            color: white;
+            transform: translateX(4px);
+        }
+
+        /* Footer Simple Professional */
+        .footer {
+            margin-top: 60px;
+            text-align: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .footer-logo {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto 20px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0.8;
+        }
+
+        .footer-logo svg {
+            width: 20px;
+            height: 20px;
+            fill: white;
+        }
+
+        .footer-text {
+            color: #555;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            margin-bottom: 8px;
+        }
+
+        .footer-copy {
+            color: #333;
+            font-size: 12px;
+            letter-spacing: 1px;
+        }
+
+        .footer-line {
+            width: 50px;
+            height: 1px;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+            margin: 20px auto;
+        }
+
+        /* Sparkle */
+        .sparkle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: white;
+            border-radius: 50%;
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        @keyframes sparkle {
+            0%, 100% { opacity: 0; transform: scale(0); }
+            50% { opacity: 1; transform: scale(1); }
+        }
+
+        /* Mobile */
+        @media (max-width: 380px) {
+            .name { font-size: 24px; }
+            .verified-glow { width: 22px; height: 22px; }
+            .verified-badge svg { width: 12px; height: 12px; }
+            .link { padding: 16px 18px; }
+            .icon-box { width: 44px; height: 44px; }
+        }
+
+        /* Reduced Motion */
+        @media (prefers-reduced-motion: reduce) {
+            .orb, .avatar-ring, .verified-glow::before, .verified-badge, .socialbuzz .icon-box svg, .online-dot::before {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- SVG Definitions -->
+    <svg width="0" height="0">
+        <defs>
+            <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#6366f1;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#ec4899;stop-opacity:1" />
+            </linearGradient>
+        </defs>
+    </svg>
+
+    <!-- Background -->
+    <div class="bg-mesh">
+        <div class="orb orb-1"></div>
+        <div class="orb orb-2"></div>
+        <div class="orb orb-3"></div>
+    </div>
+    <div class="glass"></div>
+
+    <!-- Profile -->
+    <div class="profile">
+        <div class="avatar-wrap">
+            <div class="avatar-ring"></div>
+            <div class="avatar">
+                <img src="rain.jpg" alt="profile">
+            </div>
+        </div>
+        
+        <div class="name-container">
+            <h1 class="name">RAIN</h1>
+            <div class="verified-glow">
+                <div class="verified-badge">
+                    <svg viewBox="0 0 24 24"><path d="M9 16.17L4.83 12l-1.42 1.41L9 19 21 7l-1.41-1.41z"/></svg>
+                </div>
+            </div>
+        </div>
+        
+        <div class="handle">@chaserain._</div>
+        
+        <div class="stats">
+            <div class="stat">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/></svg>
+                <span>Verified</span>
+            </div>
+            <div class="stat">
+                <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 15h-2v-6h2v6zm0-8h-2V7h2v2z"/></svg>
+                <span>Pro</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Links -->
+    <div class="links">
+        <!-- WhatsApp dengan Online Indicator -->
+        <a href="https://wa.me/6287730551795?text=HALO%20RAIN" class="link wa" target="_blank">
+            <div class="icon-box">
+                <svg viewBox="0 0 24 24"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+            </div>
+            <div class="content">
+                <div class="title">
+                    WhatsApp
+                    <span class="online-indicator">
+                        <span class="online-dot"></span>
+                        Online
+                    </span>
+                </div>
+                <div class="desc">Balas cepat</div>
+            </div>
+            <div class="arrow">→</div>
+        </a>
+
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/chaserain._?igsh=emFzbGhoeXlxcTU=" class="link ig" target="_blank">
+            <div class="icon-box">
+                <svg viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+            </div>
+            <div class="content">
+                <div class="title">Instagram</div>
+                <div class="desc">Follow & Update</div>
+            </div>
+            <div class="arrow">→</div>
+        </a>
+
+      <!-- Socialbuzz - LOVE -->
+        <a href="https://sociabuzz.com/chaserain/tribe" class="link socialbuzz" target="_blank">
+            <div class="icon-box">
+                <svg viewBox="0 0 24 24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>
+            </div>
+            <div class="content">
+                <div class="title">Socialbuzz</div>
+                <div class="desc">Support & Dukungan</div>
+            </div>
+            <div class="arrow">→</div>
+        </a>
+
+        <!-- WA Group -->
+        <a href="https://chat.whatsapp.com/DqABjEtlSuC98sAKQhd6a0?mode=gi_t" class="link wagroup" target="_blank">
+            <div class="icon-box">
+                <svg viewBox="0 0 24 24"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5c-1.66 0-3 1.34-3 3s1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5C6.34 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5c0-2.33-4.67-3.5-7-3.5zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.97 1.97 3.45V19h6v-2.5c0-2.33-4.67-3.5-7-3.5z"/></svg>
+            </div>
+            <div class="content">
+                <div class="title">WhatsApp Group Mabar</div>
+                <div class="desc">Mabar & Push Rank</div>
+            </div>
+            <div class="arrow">→</div>
+        </a>
+        
+            <!-- saweria -->
+    <a href="https://saweria.co/chaserain" class="link saweria" target="_blank">
+    <div class="icon-box">
+        <!-- Icon Cangkir Kopi -->
+        <svg viewBox="0 0 24 24">
+            <path d="M18 8h1a4 4 0 0 1 0 8h-1M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8zM6 1v3M10 1v3M14 1v3"/>
+        </svg>
+    </div>
+    <div class="content">
+        <div class="title">Saweria</div>
+        <div class="desc">Traktir kopi ☕</div>
+    </div>
+    <div class="arrow">→</div>
+        </a>
+    </div>
+
+     <!-- Footer Simple Professional -->
+    <div class="footer">
+        <div class="footer-logo">
+            <svg viewBox="0 0 24 24"><path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/></svg>
+        </div>
+        <div class="footer-text">Digital Creator</div>
+        <div class="footer-line"></div>
+        <div class="footer-copy">© 2026 • All Rights Reserved</div>
+    </div>
+
+    <script>
+        document.querySelectorAll('.link').forEach(link => {
+            link.addEventListener('touchstart', () => {}, {passive: true});
+            
+            link.addEventListener('click', function(e) {
+                const sparkle = document.createElement('div');
+                sparkle.className = 'sparkle';
+                sparkle.style.left = (e.offsetX || 50) + 'px';
+                sparkle.style.top = (e.offsetY || 50) + 'px';
+                sparkle.style.animation = 'sparkle 0.4s ease';
+                this.appendChild(sparkle);
+                setTimeout(() => sparkle.remove(), 400);
+            });
+        });
+    </script>
+</body>
+</html>
